@@ -2,7 +2,6 @@ from datetime import date
 from googlesearch import search
 import time
 import streamlit as st
-from mechanize import Browser
 today = str(date.today())
 keywords = ["Tickets", "Fun", "What to do", "Activity", "Event"]
 if "index" not in st.session_state:#if opening websites, what index to open
@@ -26,7 +25,7 @@ if region and region != st.session_state.prev_region:#check that region is not t
             query = item+'+'+today+'+'+region
             while True:
                 try:#search, but make sure we are not annoying google api.
-                    for result in search(query, num_results = 20):
+                    for result in search(query, num_results = 20, advanced = True):
                         if (result in results) == False:
                             results.append(result)
                     error.empty()
@@ -36,10 +35,6 @@ if region and region != st.session_state.prev_region:#check that region is not t
                     time.sleep(30)
     st.write("Below are links for what to do today, in the region you inputted!")
     for item in results:
-        #find the title of the webpage
-        browser = Browser()
-        browser.open(item)
-
-        st.link_button(browser.title(), item)
+        st.link_button(item.title, item.url)
 st.write("Created by Drew Warner")
-st.caption("Created using python's googlesearch-python, streamlit and mechanize")
+st.caption("Created using python's googlesearch-python and streamlit")
