@@ -35,3 +35,5 @@ if region and region != st.session_state.prev_region:#check that region is not t
     st.write("Below are links for what to do today, in the region you inputted!")
     for item in results:
         st.link_button(item, item)
+st.write("Created by Drew Warner")
+st.caption("Created using googlesearch-python and streamlit")
