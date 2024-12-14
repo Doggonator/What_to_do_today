@@ -2,7 +2,7 @@ from datetime import date
 from googlesearch import search
 import time
 import streamlit as st
-from mechanize import browser
+from mechanize import Browser
 today = str(date.today())
 keywords = ["Tickets", "Fun", "What to do", "Activity", "Event"]
 if "index" not in st.session_state:#if opening websites, what index to open
