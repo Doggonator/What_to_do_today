@@ -5,8 +5,6 @@ from datetime import date
 #set the page title to something other than "Streamlit"
 st.set_page_config(page_title = "What to do today")
 keywords = ["Tickets", "Fun", "What to do", "Activity", "Event"]
-if "index" not in st.session_state:#if opening websites, what index to open
-    st.session_state.index = 0
 if "prev_region" not in st.session_state:
     st.session_state.prev_region = "-1"
 if "day" not in st.session_state:
