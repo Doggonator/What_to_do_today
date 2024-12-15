@@ -9,8 +9,6 @@ if "index" not in st.session_state:#if opening websites, what index to open
     st.session_state.index = 0
 if "prev_region" not in st.session_state:
     st.session_state.prev_region = "-1"
-if "links" not in st.session_state:
-    st.session_state.links = []
 if "day" not in st.session_state:
     st.session_state.day = -1#will be changed to datetime once the 
 st.title("What should you do today?")
