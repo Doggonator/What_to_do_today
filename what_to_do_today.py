@@ -2,6 +2,8 @@ from googlesearch import search
 import time
 import streamlit as st
 from datetime import date
+#set the page title to something other than "Streamlit"
+st.set_page_config(page_title = "What to do today")
 keywords = ["Tickets", "Fun", "What to do", "Activity", "Event"]
 if "index" not in st.session_state:#if opening websites, what index to open
     st.session_state.index = 0
