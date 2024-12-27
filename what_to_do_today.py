@@ -1,10 +1,9 @@
 from googlesearch import search
 import time
 import streamlit as st
-from datetime import date
 #set the page title to something other than "Streamlit"
 st.set_page_config(page_title = "What to do today")
-keywords = ["Tickets", "Fun", "What to do", "Activity", "Event"]
+keywords = ["Tickets", "Fun", "What to do", "Activity", "Event", "Concert", "Live Music"]
 if "prev_region" not in st.session_state:
     st.session_state.prev_region = "-1"
 if "day" not in st.session_state:
@@ -12,8 +11,7 @@ if "day" not in st.session_state:
 st.title("What should you do today?")
 st.write("This website can help find things to do!")
 region = st.text_input("Input here where to search (i.e. city, county, district, not specific like a street or address)")
-today = str(date.today())
-day = st.date_input("Select which day to search (Default is today, "+today+" (YYYY-MM-DD))")
+day = st.date_input("Select which day to search")
 error = st.empty()
 if region and (region != st.session_state.prev_region or str(day) != st.session_state.day):#check that region is not the same, and that region has been inputted
     st.session_state.prev_region = region
@@ -26,7 +24,7 @@ if region and (region != st.session_state.prev_region or str(day) != st.session_
             query = item+'+'+str(day)+'+'+region
             while True:
                 try:#search, but make sure we are not annoying google api.
-                    for result in search(query, num_results = 20, advanced = True):
+                    for result in search(query, num_results = 15, advanced = True):
                         if (result in results) == False:
                             results.append(result)
                     error.empty()
