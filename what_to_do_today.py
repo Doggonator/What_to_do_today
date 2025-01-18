@@ -1,11 +1,11 @@
-from googlesearch import search
+from duckduckgo_search import DDGS
 import time
 import streamlit as st
 #set the page title to something other than "Streamlit"
 st.set_page_config(page_title = "What to do today")
 keywords = ["Tickets", "Fun", "What to do", "Activity", "Event", "Concert", "Live Music"]
 if "prev_region" not in st.session_state:
-    st.session_state.prev_region = "-1"
+    st.session_state.prev_region = ""
 if "day" not in st.session_state:
     st.session_state.day = -1#will be changed to datetime once the 
 st.title("What should you do today?")
@@ -24,16 +24,18 @@ if region and (region != st.session_state.prev_region or str(day) != st.session_
             query = item+'+'+str(day)+'+'+region
             while True:
                 try:#search, but make sure we are not annoying google api.
-                    for result in search(query, num_results = 15, advanced = True):
+                    for result in DDGS().text(query, max_results = 15):
+                        print(result)
                         if (result in results) == False:
                             results.append(result)
                     error.empty()
                     break
                 except Exception as e:
-                    error.error("Google has rate limited the program for searching too much. The program will now wait out the ban period. Exit the program and come back later, or stay and wait for the period to lift")
+                    print(e)
+                    error.error("DuckDuckGo has rate limited the program for searching too much. The program will now wait out the ban period. Exit the program and come back later, or stay and wait for the period to lift")
                     time.sleep(30)
     st.write("Below are links for what to do today, in the region you inputted!")
     for item in results:
-        st.link_button(item.title, item.url)
+        st.link_button(item["title"], item["href"])
 st.write("Created by Drew Warner")
-st.caption("Created using python's googlesearch-python and streamlit")
+st.caption("Created using python's duckduckgo-search and streamlit")
