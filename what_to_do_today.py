@@ -25,13 +25,11 @@ if region and (region != st.session_state.prev_region or str(day) != st.session_
             while True:
                 try:#search, but make sure we are not annoying google api.
                     for result in DDGS().text(query, max_results = 15):
-                        print(result)
                         if (result in results) == False:
                             results.append(result)
                     error.empty()
                     break
                 except Exception as e:
-                    print(e)
                     error.error("DuckDuckGo has rate limited the program for searching too much. The program will now wait out the ban period. Exit the program and come back later, or stay and wait for the period to lift")
                     time.sleep(30)
     st.write("Below are links for what to do today, in the region you inputted!")
