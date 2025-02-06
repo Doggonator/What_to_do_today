@@ -1,3 +1,4 @@
+from googlesearch import search
 from duckduckgo_search import DDGS
 import time
 import streamlit as st
@@ -13,27 +14,46 @@ st.write("This website can help find things to do!")
 region = st.text_input("Input here where to search (i.e. city, county, district, not specific like a street or address)")
 day = st.date_input("Select which day to search")
 error = st.empty()
-if region and (region != st.session_state.prev_region or str(day) != st.session_state.day):#check that region is not the same, and that region has been inputted
-    st.session_state.prev_region = region
-    st.session_state.day = str(day)
-    with st.spinner("Retrieving results..."):
-        results = []#just used to make sure we don't output the same thing
-        #get all the results here
-        for item in keywords:
-            #parse the argument
-            query = item+'+'+str(day)+'+'+region
-            while True:
-                try:#search, but make sure we are not annoying google api.
-                    for result in DDGS().text(query, max_results = 15):
-                        if (result in results) == False:
-                            results.append(result)
-                    error.empty()
-                    break
-                except Exception as e:
-                    error.error("DuckDuckGo has rate limited the program for searching too much. The program will now wait out the ban period. Exit the program and come back later, or stay and wait for the period to lift")
-                    time.sleep(30)
-    st.write("Below are links for what to do today, in the region you inputted!")
-    for item in results:
-        st.link_button(item["title"], item["href"])
+try:#try using google
+    if region and (region != st.session_state.prev_region or str(day) != st.session_state.day):#check that region is not the same, and that region has been inputted
+        st.session_state.prev_region = region
+        st.session_state.day = str(day)
+        with st.spinner("Retrieving results..."):
+            results = []#just used to make sure we don't output the same thing
+            #get all the results here
+            for item in keywords:
+                #parse the argument
+                query = item+'+'+str(day)+'+'+region
+                for result in search(query, num_results=15, advanced = True):
+                    if (result in results) == False:
+                        results.append(result)
+        st.write("Below are links for what to do today, in the region you inputted!")
+        for item in results:
+            st.link_button(item.title, item.url)
+except:#use duckduckgo instead, as google failed
+    if region and (region != st.session_state.prev_region or str(day) != st.session_state.day):#check that region is not the same, and that region has been inputted
+        with error.container():
+            st.info("Google api failed. Now using DuckDuckGo")
+        st.session_state.prev_region = region
+        st.session_state.day = str(day)
+        with st.spinner("Retrieving results..."):
+            results = []#just used to make sure we don't output the same thing
+            #get all the results here
+            for item in keywords:
+                #parse the argument
+                query = item+'+'+str(day)+'+'+region
+                while True:
+                    try:
+                        for result in DDGS().text(query, max_results = 15):#duckduckgo version, if google ever fails
+                            if (result in results) == False:
+                                results.append(result)
+                        error.empty()
+                        break
+                    except:
+                        st.error("DuckDuckGo rate limit reached. Waiting for limit to lift...")
+                        time.sleep(30)
+        st.write("Below are links for what to do today, in the region you inputted!")
+        for item in results:
+            st.link_button(item["title"], item['href'])#duckduckgo version
 st.write("Created by Drew Warner")
-st.caption("Created using python's duckduckgo-search and streamlit")
+error.empty()#we had success, so remove any errors that showed up

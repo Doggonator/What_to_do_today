@@ -1,2 +1,3 @@
+googlesearch-python
 duckduckgo-search
 streamlit
